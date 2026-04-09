@@ -22,8 +22,6 @@ public final class BridgePlugin extends JavaPlugin {
         super.setup();
         System.setProperty(ACTIVE_PROPERTY, "true");
         System.setProperty(BOOTSTRAP_READY_PROPERTY, "true");
-        getLogger().at(Level.INFO).log("Regions-MixinBridge plugin loaded.");
+        getLogger().at(Level.INFO).log("Regions-Bridge plugin loaded.");
     }
 }
-
-

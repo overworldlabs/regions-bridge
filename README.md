@@ -76,3 +76,7 @@ if (!allowed) {
 - `regions.spawn.hook`: Entity spawning restrictions.
 - `regions.death.hook`: Death-related flags (like keep inventory).
 - `regions.durability.hook`: Item durability loss prevention.
+- `regions.attribute.hook`: Control over Health, Stamina, and Special resources.
+- `regions.movement.hook`: Speed multipliers and Flight permissions.
+- `regions.visibility.hook`: Player visibility/hiding logic.
+- `regions.damage.hook`: Prevention of specific damage types (Fire, Lava, Suffocation, etc.).
