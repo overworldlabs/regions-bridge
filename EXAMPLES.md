@@ -1,6 +1,6 @@
 # Regions Bridge Examples
 
-This document provides concrete examples of how to implement and consume the various hooks provided by Regions Bridge.
+This document provides concrete examples of how to implement and consume the various hooks provided by Regions Bridge using a generic region-based protection system.
 
 ## 1. Registration
 
@@ -29,17 +29,18 @@ public void registerHooks() {
 
 ## 2. Implementation Examples (Provider Side)
 
-Below are example implementations of handlers that the Bridge will call via reflection.
+Below are example implementations of handlers that the Bridge will call via reflection. These examples assume you have a `RegionManager` to check for area-based flags.
 
 ### Damage Hook (`regions.damage.hook`)
-Prevents specific types of environmental damage.
+Prevents specific types of environmental damage within protected zones.
 
 ```java
 public class MyDamageHook {
     public boolean shouldPreventDamage(UUID uuid, String worldName, int x, int y, int z, String damageType) {
-        // Example: Prevent fire damage in a specific region
-        if (damageType.equals("FIRE") || damageType.equals("LAVA")) {
-            return isLavaSafeZone(worldName, x, y, z);
+        // Find if the location is inside a "No-Fire" or "Safety" region
+        Region region = RegionManager.getAt(worldName, x, y, z);
+        if (region != null && region.hasFlag("DISABLE_" + damageType)) {
+            return true;
         }
         return false;
     }
@@ -47,30 +48,34 @@ public class MyDamageHook {
 ```
 
 ### Movement Hook (`regions.movement.hook`)
-Handles speed and flight.
+Handles speed and flight within specific areas.
 
 ```java
 public class MyMovementHook {
     public double getMovementMultiplier(UUID uuid, String worldName, int x, int y, int z) {
-        // Grant 50% speed boost in adventure zones
-        return isAdventureZone(worldName, x, y, z) ? 1.5 : 1.0;
+        // Apply a speed boost in "Haste" regions
+        Region region = RegionManager.getAt(worldName, x, y, z);
+        return (region != null) ? region.getSpeedMultiplier() : 1.0;
     }
 
     public boolean canFly(UUID uuid, String worldName, int x, int y, int z) {
-        // Allow flight only if the player owns the plot
-        return isPlotOwner(uuid, worldName, x, y, z);
+        // Allow flight only in specific "Fly-Allowed" regions or for region owners
+        Region region = RegionManager.getAt(worldName, x, y, z);
+        return region != null && (region.isOwner(uuid) || region.hasFlag("ALLOW_FLIGHT"));
     }
 }
 ```
 
 ### Attribute Hook (`regions.attribute.hook`)
-Controls Health, Stamina, and Special (Mana) resources.
+Controls Health, Stamina, and Special resources based on region rules.
 
 ```java
 public class MyAttributeHook {
     public boolean shouldPreventAttributeLoss(UUID uuid, String worldName, int x, int y, int z, String type) {
-        if (type.equals("STAMINA")) {
-            return true; // Infinite stamina everywhere for this example
+        Region region = RegionManager.getAt(worldName, x, y, z);
+        // Example: Infinite stamina in "Hub" or "Parkour" regions
+        if (type.equals("STAMINA") && region != null && region.hasFlag("INFINITE_STAMINA")) {
+            return true;
         }
         return false;
     }
@@ -81,7 +86,7 @@ public class MyAttributeHook {
 
 ## 3. Querying Examples (Consumer Side / Mixins)
 
-How to call these hooks from within server systems or Mixins.
+How to call these hooks from within server systems without knowing which plugin provides the protection.
 
 ### Controlling Flight in Player Systems
 
@@ -93,8 +98,10 @@ public void updatePlayerFlight(PlayerRef player) {
     int y = (int) player.getTransform().getPosition().y;
     int z = (int) player.getTransform().getPosition().z;
 
+    // The bridge checks the registry automatically
     if (HookResolver.canFly(uuid, world, x, y, z)) {
-        // Enable Hytale's internal flight component
+        // Enable flight for the player
+        player.getComponent(FlightComponent.class).setCanFly(true);
     }
 }
 ```
@@ -103,28 +110,13 @@ public void updatePlayerFlight(PlayerRef player) {
 
 ```java
 public void onDamage(DamageEvent event) {
+    // Check if the area protects against this specific damage type
     if (HookResolver.shouldPreventDamage(
             event.getTargetUuid(), 
             event.getWorldName(), 
-            event.getX(), event.getY(), event.getZ(), 
+            (int)event.getX(), (int)event.getY(), (int)event.getZ(), 
             event.getDamageType().name())) {
         event.setCancelled(true);
     }
-}
-```
-
-### Applying Speed Multipliers
-
-```java
-public float calculateFinalSpeed(PlayerRef player, float baseSpeed) {
-    double multiplier = HookResolver.getMovementMultiplier(
-        player.getUuid(), 
-        player.getWorldName(),
-        (int)player.getTransform().getPosition().x,
-        (int)player.getTransform().getPosition().y,
-        (int)player.getTransform().getPosition().z
-    );
-    
-    return (float) (baseSpeed * multiplier);
 }
 ```
