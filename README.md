@@ -6,6 +6,9 @@ A decoupled, lightweight bridge module for Hytale server plugins to interact wit
 
 Regions Bridge provides a reflection-based hook system. It allows low-level modules (like Mixins or native server components) to query protection rules stored in high-level plugins.
 
+> [!TIP]
+> Check out [EXAMPLES.md](./EXAMPLES.md) for concrete implementation and usage examples!
+
 ## How it Works
 
 The bridge uses a global registry stored in `System.getProperties()` to decouple the implementation from the consumer.
