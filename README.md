@@ -20,6 +20,20 @@ This bridge is intended to be used as a standalone `.jar` plugin on the server. 
 ### As a Dependency
 Add the `regions-bridge.jar` to your project's build path (as a `compileOnly` or `provided` dependency) so you can access the `HookResolver` class during development.
 
+### Optional Integration
+If you want your plugin to work even without the bridge installed, you should check for the presence of the bridge at runtime before calling `HookResolver`:
+
+```java
+public boolean isBridgeActive() {
+    return Boolean.getBoolean("regions.mixin.bridge.active");
+}
+
+// Usage
+if (isBridgeActive()) {
+    HookResolver.check(...);
+}
+```
+
 ## Usage
 
 ### Registration (In your Plugin)
