@@ -64,7 +64,7 @@ public final class BridgeTransformer implements ClassTransformer {
         String version = readVersion();
         System.out.println("[Regions-MixinBridge] Loaded as EARLY PLUGIN (ClassTransformer) (v" + version + ").");
         System.out.println("[Regions-MixinBridge] Early mixin bootstrap is active.");
-        BridgeUpdateNotifier.checkOnce(version);
+        BridgeUpdateNotifier.check(version);
     }
 
     @Override

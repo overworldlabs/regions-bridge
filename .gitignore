@@ -1,0 +1,38 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.settings/
+.project
+.classpath
+.factorypath
+
+# VS Code
+.vscode/
+
+# Local configuration
+local.properties
+
+# Log files
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Hytale/Server files (often found in plugin dev environments)
+run/
+logs/
+plugins/
+libraries/
+saves/
+server.properties
+scripts/
