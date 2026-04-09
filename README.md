@@ -15,19 +15,10 @@ The bridge uses a global registry stored in `System.getProperties()` to decouple
 
 ## Installation
 
-### As a Submodule
-To include this in your project:
-```bash
-git submodule add https://github.com/overworldlabs/regions-bridge.git lib/regions-bridge
-```
+This bridge is intended to be used as a standalone `.jar` plugin on the server. Other plugins can then optionally interact with it.
 
-### Gradle Dependency
-Add the following to your `build.gradle.kts`:
-```kotlin
-dependencies {
-    implementation(project(":regions-bridge"))
-}
-```
+### As a Dependency
+Add the `regions-bridge.jar` to your project's build path (as a `compileOnly` or `provided` dependency) so you can access the `HookResolver` class during development.
 
 ## Usage
 
