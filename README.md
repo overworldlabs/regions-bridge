@@ -7,7 +7,12 @@ A decoupled, lightweight bridge module for Hytale server plugins to interact wit
 Regions Bridge provides a reflection-based hook system. It allows low-level modules (like Mixins or native server components) to query protection rules stored in high-level plugins.
 
 > [!TIP]
-> Check out [EXAMPLES.md](./EXAMPLES.md) for concrete implementation and usage examples!
+> Check out our structured documentation for integration:
+> - [**Development Setup Guide**](./docs/setup.md) - **Start here!**
+> - [Hook Registration](./docs/examples/registration.md) - How to attach your plugin to the Bridge.
+> - [Protection Hooks](./docs/examples/protection-hooks.md) - Implementing area-based rules (Provider Side).
+> - [Querying & Mixins](./docs/examples/querying.md) - Consuming the Bridge from Hytale systems.
+> - [Advanced Features](./docs/examples/advanced-hytale.md) - Using Accessors and Invokers for complex tasks.
 
 ## How it Works
 

@@ -4,7 +4,6 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
 import javax.annotation.Nonnull;
-import java.util.logging.Level;
 
 /**
  * Bridge plugin entrypoint for runtime diagnostics/state flags.
@@ -22,6 +21,6 @@ public final class BridgePlugin extends JavaPlugin {
         super.setup();
         System.setProperty(ACTIVE_PROPERTY, "true");
         System.setProperty(BOOTSTRAP_READY_PROPERTY, "true");
-        getLogger().at(Level.INFO).log("Regions-Bridge plugin loaded.");
+        getLogger().atInfo().log("Regions-Bridge plugin loaded.");
     }
 }

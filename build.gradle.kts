@@ -58,6 +58,15 @@ dependencies {
     implementation("org.ow2.sat4j:org.ow2.sat4j.pb:2.3.6")
     implementation("com.google.guava:guava:33.2.1-jre")
     implementation("com.google.code.gson:gson:2.10.1")
+
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
 }
 
 tasks.processResources {
